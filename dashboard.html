@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submissions Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to));
+            --tw-gradient-from: #eff6ff; /* blue-50 */
+            --tw-gradient-to: #ffffff;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* Red asterisk for all required labels */
+        label.required::after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        /* Input and textarea focus styles */
+        input:focus,
+        textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6; /* blue-500 */
+        }
+    </style>
+</head>
+<body class="p-6 md:p-10 flex flex-col items-center">
+
+    <div id="login-container" class="max-w-xl w-full mx-auto bg-white rounded-2xl shadow-lg p-8 md:p-10 mt-20 border border-blue-100">
+        <div class="flex flex-col items-center mb-6">
+            <!-- Company logo placeholder for the login page -->
+            <img src="https://placehold.co/150x50/e0e0e0/ffffff?text=Company+Logo" alt="Company Logo" class="h-10 w-auto mb-4 rounded-lg shadow-sm" />
+            <h2 class="text-3xl font-bold text-center text-blue-800">Staff Login</h2>
+            <p class="text-sm text-center text-gray-500 mt-2">Access the submissions dashboard</p>
+        </div>
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label for="username" class="block text-sm font-medium text-slate-900">Username</label>
+                <input type="text" id="username" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" required>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium text-slate-900">Password</label>
+                <input type="password" id="password" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" required>
+            </div>
+            <p id="login-error-msg" class="text-center text-red-600 text-sm hidden"></p>
+            <button type="submit" class="w-full py-3 px-8 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition">
+                Login
+            </button>
+        </form>
+        <div class="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-600">
+            <h4 class="font-bold mb-2">Allowed Usernames (for demonstration)</h4>
+            <p><strong>Note:</strong> In a real application, these would be managed securely with a database.</p>
+            <ul class="list-disc list-inside mt-2 text-gray-700">
+                <li>meet.trivedi</li>
+                <li>saurav.patel</li>
+                <li>krushnaraj.nakum</li>
+                <li>darshan.dalwadi</li>
+            </ul>
+            <p class="mt-4 font-bold">Temporary Passwords</p>
+            <p>Each user's password is `firstNameInnovations@007` (e.g., `meetInnovations@007`)</p>
+        </div>
+    </div>
+
+    <div id="dashboard-container" class="max-w-6xl w-full hidden">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Submissions Dashboard</h1>
+            <p class="text-lg text-gray-600">Securely view all incoming contact and career form data in real-time.</p>
+            <div id="user-info" class="mt-4 text-sm text-gray-500"></div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Contact Us Submissions Section -->
+            <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-blue-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-blue-600">Contact Us Submissions</h2>
+                    <span id="contact-count" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm">0 entries</span>
+                </div>
+                <!-- Form to simulate a new submission -->
+                <form id="contact-form" class="bg-white p-6 rounded-2xl shadow-inner mb-6 border border-blue-100">
+                    <h3 class="font-semibold text-xl md:text-2xl text-blue-900 mb-4">Add New Contact</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="contact-name" class="required block text-sm font-medium text-slate-900">Name</label>
+                            <input type="text" id="contact-name" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="Your name" required>
+                        </div>
+                        <div>
+                            <label for="contact-email" class="required block text-sm font-medium text-slate-900">Email</label>
+                            <input type="email" id="contact-email" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="you@example.com" required>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label for="contact-subject" class="block text-sm font-medium text-slate-900">Subject</label>
+                        <input type="text" id="contact-subject" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="Project Inquiry, Partnership, etc.">
+                    </div>
+                    <div class="mt-4">
+                        <label for="contact-message" class="required block text-sm font-medium text-slate-900">Message</label>
+                        <textarea id="contact-message" rows="3" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="Your message" required></textarea>
+                    </div>
+                    <button type="submit" class="mt-6 w-full flex justify-center py-3 px-8 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition">
+                        Add Contact Submission
+                    </button>
+                    <div id="contact-message-box" class="mt-4 text-center text-sm"></div>
+                </form>
+
+                <div id="contact-submissions-container" class="space-y-4">
+                    <!-- Contact submissions will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Career Submissions Section -->
+            <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-blue-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-purple-600">Career Submissions</h2>
+                    <span id="career-count" class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full font-semibold text-sm">0 entries</span>
+                </div>
+                <!-- Form to simulate a new submission -->
+                <form id="career-form" class="bg-white p-6 rounded-2xl shadow-inner mb-6 border border-blue-100">
+                    <h3 class="font-semibold text-xl md:text-2xl text-purple-900 mb-4">Add New Candidate</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="firstName" class="required block text-sm font-medium text-slate-900">First Name</label>
+                            <input type="text" id="firstName" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Your first name" required>
+                        </div>
+                        <div>
+                            <label for="lastName" class="required block text-sm font-medium text-slate-900">Last Name</label>
+                            <input type="text" id="lastName" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Your last name" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label for="email" class="required block text-sm font-medium text-slate-900">Email</label>
+                            <input type="email" id="email" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="you@example.com" required>
+                        </div>
+                        <div>
+                            <label for="phone" class="required block text-sm font-medium text-slate-900">Contact No.</label>
+                            <input type="tel" id="phone" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Ex: 9876543210" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                         <div>
+                            <label for="workExp" class="required block text-sm font-medium text-slate-900">Work Experience</label>
+                            <input type="text" id="workExp" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="e.g., 1 year, Fresher" required>
+                        </div>
+                        <div>
+                            <label for="applyingFor" class="required block text-sm font-medium text-slate-900">Applying For</label>
+                            <input type="text" id="applyingFor" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="e.g., Full-Stack Developer" required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label for="github" class="required block text-sm font-medium text-slate-900">GitHub Link</label>
+                            <input type="url" id="github" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="https://github.com/username" required>
+                        </div>
+                        <div>
+                            <label for="linkedin" class="required block text-sm font-medium text-slate-900">LinkedIn Profile Link</label>
+                            <input type="url" id="linkedin" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="https://www.linkedin.com/in/username" required>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <label for="intro" class="block text-sm font-medium text-slate-900">Short Intro (Optional)</label>
+                        <textarea id="intro" rows="3" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Tell us about yourself (optional)"></textarea>
+                    </div>
+                     <div class="mt-4">
+                        <label for="resume" class="required block text-sm font-medium text-slate-900">Resume File</label>
+                        <input type="file" id="resume" accept=".pdf" class="mt-2 w-full text-slate-900 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3">
+                    </div>
+                    <button type="submit" class="mt-6 w-full flex justify-center py-3 px-8 rounded-xl font-semibold text-white bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition">
+                        Add Career Submission
+                    </button>
+                    <div id="career-message-box" class="mt-4 text-center text-sm"></div>
+                </form>
+
+                <div id="career-submissions-container" class="space-y-4">
+                    <!-- Career submissions will be rendered here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
+        // Enable debug logging for Firebase
+        setLogLevel('debug');
+
+        // Global variables provided by the environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        // UI elements
+        const loginContainer = document.getElementById('login-container');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginErrorMsg = document.getElementById('login-error-msg');
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const userInfoEl = document.getElementById('user-info');
+        const contactForm = document.getElementById('contact-form');
+        const careerForm = document.getElementById('career-form');
+        const contactSubmissionsContainer = document.getElementById('contact-submissions-container');
+        const careerSubmissionsContainer = document.getElementById('career-submissions-container');
+        const contactCountEl = document.getElementById('contact-count');
+        const careerCountEl = document.getElementById('career-count');
+        const contactMessageBox = document.getElementById('contact-message-box');
+        const careerMessageBox = document.getElementById('career-message-box');
+
+        // Usernames and their full names
+        const userNames = {
+            'meet.trivedi': 'Meet Trivedi',
+            'saurav.patel': 'Saurav Patel',
+            'krushnaraj.nakum': 'Krushnaraj Nakum',
+            'darshan.dalwadi': 'Darshan Dalwadi',
+        };
+        let currentLoggedInUser = null;
+
+        // Function to show a temporary message
+        function showMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `mt-4 text-center text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+            setTimeout(() => {
+                element.textContent = '';
+                element.className = 'mt-4 text-center text-sm';
+            }, 3000);
+        }
+
+        // Handle user authentication and data loading
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // If not authenticated, ensure the login page is visible.
+                loginContainer.classList.remove('hidden');
+                dashboardContainer.classList.add('hidden');
+            } else {
+                // If authenticated, hide login and show dashboard
+                loginContainer.classList.add('hidden');
+                dashboardContainer.classList.remove('hidden');
+                
+                const displayName = userNames[currentLoggedInUser] || 'Guest';
+                userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${displayName}</span>`;
+
+                // Firestore paths based on security rules
+                const contactCollectionPath = `artifacts/${appId}/public/data/contact_submissions`;
+                const careerCollectionPath = `artifacts/${appId}/public/data/career_submissions`;
+
+                // Real-time listener for contact submissions
+                const contactQuery = query(collection(db, contactCollectionPath));
+                onSnapshot(contactQuery, (snapshot) => {
+                    contactSubmissionsContainer.innerHTML = ''; // Clear previous data
+                    contactCountEl.textContent = `${snapshot.docs.length} entries`;
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const submissionDate = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'N/A';
+                        const card = `
+                            <div class="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-200">
+                                <h4 class="text-base font-bold text-blue-800">${data.name}</h4>
+                                <ul class="text-xs text-gray-700 mt-2 space-y-1">
+                                    <li><strong>Email:</strong> ${data.email}</li>
+                                    <li><strong>Subject:</strong> ${data.subject || 'N/A'}</li>
+                                </ul>
+                                <p class="text-xs text-gray-500 mt-2 italic">${data.message}</p>
+                                <p class="text-right text-xs text-gray-400 mt-2">Submitted: ${submissionDate}</p>
+                            </div>
+                        `;
+                        contactSubmissionsContainer.innerHTML += card;
+                    });
+                }, (error) => {
+                    console.error("Error fetching contact data:", error);
+                    contactSubmissionsContainer.innerHTML = `<p class="text-red-600 text-sm">Failed to load data. Check console for details.</p>`;
+                });
+
+                // Real-time listener for career submissions
+                const careerQuery = query(collection(db, careerCollectionPath));
+                onSnapshot(careerQuery, (snapshot) => {
+                    careerSubmissionsContainer.innerHTML = ''; // Clear previous data
+                    careerCountEl.textContent = `${snapshot.docs.length} entries`;
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        const submissionDate = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'N/A';
+                        const card = `
+                            <div class="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-200">
+                                <h4 class="text-base font-bold text-purple-800">${data.firstName} ${data.lastName}</h4>
+                                <p class="text-sm text-purple-600">${data.applyingFor}</p>
+                                <ul class="text-xs text-gray-700 mt-2 space-y-1">
+                                    <li><strong>Email:</strong> ${data.email}</li>
+                                    <li><strong>Phone:</strong> ${data.phone}</li>
+                                    <li><strong>Experience:</strong> ${data.workExp}</li>
+                                    <li><strong>GitHub:</strong> <a href="${data.github}" target="_blank" class="text-blue-500 hover:underline break-all">${data.github}</a></li>
+                                    <li><strong>LinkedIn:</strong> <a href="${data.linkedin}" target="_blank" class="text-blue-500 hover:underline break-all">${data.linkedin}</a></li>
+                                    ${data.resumeUrl ? `<li><strong>Resume:</strong> <a href="${data.resumeUrl}" target="_blank" class="text-blue-500 hover:underline">View Resume</a></li>` : ''}
+                                </ul>
+                                ${data.intro ? `<p class="text-xs text-gray-500 mt-2 italic">${data.intro}</p>` : ''}
+                                <p class="text-right text-xs text-gray-400 mt-2">Submitted: ${submissionDate}</p>
+                            </div>
+                        `;
+                        careerSubmissionsContainer.innerHTML += card;
+                    });
+                }, (error) => {
+                    console.error("Error fetching career data:", error);
+                    careerSubmissionsContainer.innerHTML = `<p class="text-red-600 text-sm">Failed to load data. Check console for details.</p>`;
+                });
+
+                // Handle contact form submission
+                contactForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('contact-name').value;
+                    const email = document.getElementById('contact-email').value;
+                    const subject = document.getElementById('contact-subject').value;
+                    const message = document.getElementById('contact-message').value;
+
+                    try {
+                        await addDoc(collection(db, contactCollectionPath), {
+                            name,
+                            email,
+                            subject,
+                            message,
+                            timestamp: new Date()
+                        });
+                        showMessage(contactMessageBox, 'Submission added successfully!', 'success');
+                        contactForm.reset();
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                        showMessage(contactMessageBox, 'Error adding submission.', 'error');
+                    }
+                });
+
+                // Handle career form submission
+                careerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName = document.getElementById('lastName').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    const workExp = document.getElementById('workExp').value;
+                    const applyingFor = document.getElementById('applyingFor').value;
+                    const github = document.getElementById('github').value;
+                    const linkedin = document.getElementById('linkedin').value;
+                    const intro = document.getElementById('intro').value;
+                    const resumeFile = document.getElementById('resume').files[0];
+
+                    if (!resumeFile) {
+                        showMessage(careerMessageBox, 'Please select a resume file.', 'error');
+                        return;
+                    }
+                    
+                    try {
+                        // Create a reference to the storage path
+                        const resumeRef = ref(storage, `resumes/${Date.now()}-${resumeFile.name}`);
+                        
+                        // Upload the file
+                        await uploadBytes(resumeRef, resumeFile);
+                        
+                        // Get the public download URL
+                        const resumeUrl = await getDownloadURL(resumeRef);
+
+                        // Save the data to Firestore with the resume URL
+                        await addDoc(collection(db, careerCollectionPath), {
+                            firstName,
+                            lastName,
+                            email,
+                            phone,
+                            workExp,
+                            applyingFor,
+                            github,
+                            linkedin,
+                            intro,
+                            resumeUrl,
+                            timestamp: new Date()
+                        });
+                        showMessage(careerMessageBox, 'Submission added successfully!', 'success');
+                        careerForm.reset();
+                    } catch (e) {
+                        console.error("Error adding document or uploading file: ", e);
+                        if (e.code === 'storage/unauthorized') {
+                            showMessage(careerMessageBox, 'Permission Denied. Please check your Firebase Storage security rules.', 'error');
+                        } else {
+                            showMessage(careerMessageBox, 'Error adding submission.', 'error');
+                        }
+                    }
+                });
+            }
+        });
+        
+        // Allowed users for demonstration purposes
+        const allowedUsers = {
+            'meet.trivedi': 'meetInnovations@007',
+            'saurav.patel': 'sauravInnovations@007',
+            'krushnaraj.nakum': 'krushnarajInnovations@007',
+            'darshan.dalwadi': 'darshanInnovations@007',
+        };
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+
+            // Check hardcoded credentials
+            if (allowedUsers[username] && allowedUsers[username] === password) {
+                currentLoggedInUser = username; // Store the username
+                try {
+                    // Sign in with anonymous auth since it's the simplest way to get a user ID and trigger onAuthStateChanged
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    loginErrorMsg.classList.add('hidden');
+                } catch (error) {
+                    console.error("Authentication failed after local login:", error);
+                    loginErrorMsg.textContent = 'An internal authentication error occurred.';
+                    loginErrorMsg.classList.remove('hidden');
+                }
+            } else {
+                loginErrorMsg.textContent = 'Invalid username or password.';
+                loginErrorMsg.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
