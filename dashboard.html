@@ -253,9 +253,6 @@
                 loginContainer.classList.add('hidden');
                 dashboardContainer.classList.remove('hidden');
                 
-                const displayName = userNames[currentLoggedInUser] || 'Guest';
-                userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${displayName}</span>`;
-
                 // Firestore paths based on security rules
                 const contactCollectionPath = `artifacts/${appId}/public/data/contact_submissions`;
                 const careerCollectionPath = `artifacts/${appId}/public/data/career_submissions`;
@@ -414,21 +411,26 @@
 
             // Check hardcoded credentials
             if (allowedUsers[username] && allowedUsers[username] === password) {
-                currentLoggedInUser = username; // Store the username
+                // If credentials are correct, show the dashboard immediately
+                const displayName = userNames[username] || 'Guest';
+                userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${displayName}</span>`;
+                loginContainer.classList.add('hidden');
+                dashboardContainer.classList.remove('hidden');
+                loginErrorMsg.classList.add('hidden');
+
                 try {
-                    // Sign in with anonymous auth since it's the simplest way to get a user ID and trigger onAuthStateChanged
+                    // Start the Firebase auth process in the background
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
                     } else {
                         await signInAnonymously(auth);
                     }
-                    loginErrorMsg.classList.add('hidden');
                 } catch (error) {
-                    console.error("Authentication failed after local login:", error);
-                    loginErrorMsg.textContent = 'An internal authentication error occurred.';
-                    loginErrorMsg.classList.remove('hidden');
+                    console.error("Background authentication failed:", error);
+                    // Handle this error silently as the UI is already showing
                 }
             } else {
+                // Show an error if credentials are wrong
                 loginErrorMsg.textContent = 'Invalid username or password.';
                 loginErrorMsg.classList.remove('hidden');
             }
