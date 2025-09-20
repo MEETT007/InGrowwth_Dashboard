@@ -46,9 +46,15 @@
                 <label for="username" class="block text-sm font-medium text-slate-900">Username</label>
                 <input type="text" id="username" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" required>
             </div>
-            <div>
+            <div class="relative">
                 <label for="password" class="block text-sm font-medium text-slate-900">Password</label>
                 <input type="password" id="password" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" required>
+                <button type="button" id="toggle-password-visibility" class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-sm leading-5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </button>
             </div>
             <p id="login-error-msg" class="text-center text-red-600 text-sm hidden"></p>
             <button type="submit" class="w-full py-3 px-8 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition">
@@ -412,6 +418,7 @@
             // Check hardcoded credentials
             if (allowedUsers[username] && allowedUsers[username] === password) {
                 // If credentials are correct, show the dashboard immediately
+                currentLoggedInUser = username;
                 const displayName = userNames[username] || 'Guest';
                 userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${displayName}</span>`;
                 loginContainer.classList.add('hidden');
@@ -435,6 +442,24 @@
                 loginErrorMsg.classList.remove('hidden');
             }
         });
+
+        // Add event listener for the toggle password button
+        const togglePasswordVisibility = document.getElementById('toggle-password-visibility');
+        if (togglePasswordVisibility) {
+            togglePasswordVisibility.addEventListener('click', () => {
+                const passwordInput = document.getElementById('password');
+                const icon = togglePasswordVisibility.querySelector('svg');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7a9.957 9.957 0 011.875.175M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 20L4 4" />`;
+                } else {
+                    passwordInput.type = 'password';
+                    icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
+                }
+            });
+        }
     </script>
 </body>
 </html>
