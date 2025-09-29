@@ -1,465 +1,588 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Submissions Dashboard</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-image: linear-gradient(to bottom right, var(--tw-gradient-from), var(--tw-gradient-to));
-            --tw-gradient-from: #eff6ff; /* blue-50 */
-            --tw-gradient-to: #ffffff;
-            color: #1f2937;
-            min-height: 100vh;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Form Submissions Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
-        /* Red asterisk for all required labels */
-        label.required::after {
-            content: " *";
-            color: #ef4444;
-        }
+    /* base */
+    body { font-family: 'Inter', sans-serif; color:#1f2937; min-height:100vh;
+      /* radiant background similar to your screenshot */
+      background:
+        radial-gradient(600px 250px at 6% 12%, rgba(124,58,237,0.14), transparent 12%),
+        radial-gradient(500px 220px at 94% 86%, rgba(59,130,246,0.12), transparent 10%),
+        linear-gradient(135deg,#f8fafc,#eef2ff 50%,#fff7fe);
+    }
 
-        /* Input and textarea focus styles */
-        input:focus,
-        textarea:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-            border-color: #3b82f6; /* blue-500 */
-        }
-    </style>
+    label.required::after { content: " *"; color: #ef4444; }
+    input:focus, textarea:focus { outline:none; box-shadow:0 6px 24px rgba(99,102,241,0.06), 0 0 0 6px rgba(99,102,241,0.04); border-color:rgba(99,102,241,0.5); background:#fff; }
+    .input-with-icon { position: relative; }
+
+    /* <-- UPDATED: push the eye button more to the RIGHT and make sure it overrides other rules --> */
+    .input-with-icon button {
+      position: absolute;
+      right: 1.25rem !important; /* moved further right (increase if you want even more) */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .hidden-el { display:none !important; }
+
+    /* main split login card */
+    .split-card {
+      width: 100%;
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: rgba(255,255,255,0.96);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(2,6,23,0.08);
+      overflow: hidden;
+      margin-top: 4.5rem;
+    }
+
+    .split-left {
+      padding: 48px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.44), rgba(255,255,255,0.22));
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:14px;
+    }
+
+    .split-right {
+      padding: 48px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .brand-chip {
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      background: linear-gradient(90deg,#f8f4ff,#f3f0ff);
+      border-radius:12px;
+      padding:10px 14px;
+      border: 1px solid rgba(99,102,241,0.06);
+      box-shadow: 0 6px 18px rgba(99,102,241,0.04);
+    }
+    .brand-chip img { height:64px; width:auto; border-radius:10px; display: block; object-fit: contain; }
+
+    .btn-primary {
+      background: linear-gradient(90deg,#7c3aed,#4f46e5);
+      color: #fff;
+      border-radius: 12px;
+      font-weight: 700;
+      padding: 12px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(79,70,229,0.18);
+    }
+
+    /* keep original dashboard card glassy */
+    .bg-white.rounded-2xl {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(203,213,225,0.35);
+    }
+
+    .shadow-inner { box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+
+    @media (max-width: 900px) {
+      .brand-chip img { height: 48px; }
+      .brand-chip { gap: 10px; padding: 8px 10px; }
+      .split-card { grid-template-columns: 1fr; margin-top: 2.5rem; }
+      .split-left, .split-right { padding: 24px; }
+    }
+  </style>
 </head>
 <body class="p-6 md:p-10 flex flex-col items-center">
 
-    <div id="login-container" class="max-w-xl w-full mx-auto bg-white rounded-2xl shadow-lg p-8 md:p-10 mt-20 border border-blue-100">
-        <div class="flex flex-col items-center mb-6">
-            <!-- Company logo placeholder for the login page -->
-            <img src="https://placehold.co/150x50/e0e0e0/ffffff?text=Company+Logo" alt="Company Logo" class="h-10 w-auto mb-4 rounded-lg shadow-sm" />
-            <h2 class="text-3xl font-bold text-center text-blue-800">Staff Login</h2>
-            <p class="text-sm text-center text-gray-500 mt-2">Access the submissions dashboard</p>
+  <!-- LOGIN: replaced with split card UI (left info, right form) -->
+  <div id="login-container" class="split-card mx-auto">
+    <!-- LEFT PANEL: Branding & Info -->
+    <div class="split-left">
+      <div class="brand-chip">
+        <img id="company-logo" src="company_logo_new_rounded.png" alt="Logo" />
+        <div>
+          <div style="font-weight:700;color:#4f46e5;">InGrowwth Innovations</div>
+          <div style="font-size:0.85rem;color:#6b7280;">Team Dashboard</div>
         </div>
-        <form id="login-form" class="space-y-6">
-            <div>
-                <label for="username" class="block text-sm font-medium text-slate-900">Username</label>
-                <input type="text" id="username" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" required>
+      </div>
+
+      <h1 style="font-size:1.5rem;font-weight:800;color:#4f46e5;margin:0;line-height:1.05;">
+        Welcome back — sign in to your staff dashboard
+      </h1>
+
+      <p style="color:#6b7280;max-width:480px;">
+        Securely view and manage incoming contact and career submissions. This dashboard uses real-time updates — your changes will appear instantly.
+      </p>
+
+      <div style="margin-top:8px;color:#374151;font-weight:600;">Fast access</div>
+      <div style="font-size:0.9rem;color:#6b7280;">Real-time updates • File uploads • Secure</div>
+
+      <div style="margin-top:12px;color:#6b7280;font-size:0.92rem;max-width:480px;">
+        <strong>Tip:</strong> Use your organization email. If you don't have an account ask the admin to create one in Firebase console.
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: Login form -->
+    <div class="split-right">
+      <div style="max-width:520px;width:100%;">
+        <div style="font-size:0.9rem;color:#6b7280;font-weight:600;">Staff Login</div>
+        <div style="font-size:1.6rem;font-weight:800;color:#3730a3;margin-top:6px;margin-bottom:6px;">Sign in to continue</div>
+        <div style="color:#6b7280;margin-bottom:18px;">Enter your credentials below</div>
+
+        <form id="login-form" class="space-y-6" autocomplete="off" novalidate>
+          <div>
+            <label for="login-email" class="block text-sm font-medium text-slate-900">Email</label>
+            <input type="email" id="login-email" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3" placeholder="you@company.com" required>
+          </div>
+
+          <div>
+            <label for="login-password" class="block text-sm font-medium text-slate-900">Password</label>
+            <div class="input-with-icon mt-1">
+              <!-- <-- UPDATED: increase padding-right so text doesn't collide with the eye --> 
+              <input type="password" id="login-password" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-6" placeholder="Your password" required>
+              <button type="button" id="toggle-password-visibility" aria-label="Show password" class="absolute top-1/2 -translate-y-1/2 bg-transparent border-0 p-2 text-slate-600 hover:bg-slate-100 rounded">
+                <!-- eye icon (open) -->
+                <!-- <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg> -->
+                <!-- eye icon (closed) -->
+                <!-- <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M20 20L4 4" />
+                </svg> -->
+              </button>
             </div>
-            <div class="relative">
-                <label for="password" class="block text-sm font-medium text-slate-900">Password</label>
-                <input type="password" id="password" class="mt-1 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" required>
-                <button type="button" id="toggle-password-visibility" class="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-sm leading-5">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                </button>
-            </div>
-            <p id="login-error-msg" class="text-center text-red-600 text-sm hidden"></p>
-            <button type="submit" class="w-full py-3 px-8 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition">
-                Login
-            </button>
+          </div>
+
+          <p id="login-error-msg" class="text-center text-red-600 text-sm hidden"></p>
+
+          <div class="flex items-center justify-between text-sm">
+            <label class="flex items-center gap-2 text-gray-600"><input type="checkbox" class="rounded"> Remember me</label>
+            <a href="#" class="text-indigo-600">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary">✓ Sign in</button>
+
+          <div class="mt-4 text-sm text-gray-500">Not a member? <a href="#" class="text-indigo-600">Contact admin</a></div>
         </form>
-        <div class="mt-8 pt-6 border-t border-gray-200 text-sm text-gray-600">
-            <h4 class="font-bold mb-2">Allowed Usernames (for demonstration)</h4>
-            <p><strong>Note:</strong> In a real application, these would be managed securely with a database.</p>
-            <ul class="list-disc list-inside mt-2 text-gray-700">
-                <li>meet.trivedi</li>
-                <li>saurav.patel</li>
-                <li>krushnaraj.nakum</li>
-                <li>darshan.dalwadi</li>
-            </ul>
-            <p class="mt-4 font-bold">Temporary Passwords</p>
-            <p>Each user's password is `firstNameInnovations@007` (e.g., `meetInnovations@007`)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard-container" class="max-w-6xl w-full hidden mt-8">
+    <header class="text-center mb-6">
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Submissions Dashboard</h1>
+      <p class="text-lg text-gray-600">Securely view all incoming contact and career form data in real-time.</p>
+      <div id="user-info" class="mt-4 text-sm text-gray-500"></div>
+    </header>
+
+    <main class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full px-4">
+      <!-- Contact Section -->
+      <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-blue-100">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-blue-600">Contact Us Submissions</h2>
+          <span id="contact-count" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm">0 entries</span>
         </div>
-    </div>
 
-    <div id="dashboard-container" class="max-w-6xl w-full hidden">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Submissions Dashboard</h1>
-            <p class="text-lg text-gray-600">Securely view all incoming contact and career form data in real-time.</p>
-            <div id="user-info" class="mt-4 text-sm text-gray-500"></div>
-        </header>
+        <form id="contact-form" class="bg-white p-6 rounded-2xl shadow-inner mb-6 border border-blue-100">
+          <h3 class="font-semibold text-xl md:text-2xl text-blue-900 mb-4">Add New Contact</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="contact-name" class="required block text-sm font-medium text-slate-900">Name</label>
+              <input type="text" id="contact-name" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Your name" required>
+            </div>
+            <div>
+              <label for="contact-email" class="required block text-sm font-medium text-slate-900">Email</label>
+              <input type="email" id="contact-email" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="you@example.com" required>
+            </div>
+          </div>
 
-        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Contact Us Submissions Section -->
-            <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-blue-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold text-blue-600">Contact Us Submissions</h2>
-                    <span id="contact-count" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full font-semibold text-sm">0 entries</span>
-                </div>
-                <!-- Form to simulate a new submission -->
-                <form id="contact-form" class="bg-white p-6 rounded-2xl shadow-inner mb-6 border border-blue-100">
-                    <h3 class="font-semibold text-xl md:text-2xl text-blue-900 mb-4">Add New Contact</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="contact-name" class="required block text-sm font-medium text-slate-900">Name</label>
-                            <input type="text" id="contact-name" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="Your name" required>
-                        </div>
-                        <div>
-                            <label for="contact-email" class="required block text-sm font-medium text-slate-900">Email</label>
-                            <input type="email" id="contact-email" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="you@example.com" required>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <label for="contact-subject" class="block text-sm font-medium text-slate-900">Subject</label>
-                        <input type="text" id="contact-subject" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="Project Inquiry, Partnership, etc.">
-                    </div>
-                    <div class="mt-4">
-                        <label for="contact-message" class="required block text-sm font-medium text-slate-900">Message</label>
-                        <textarea id="contact-message" rows="3" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-200 focus:outline-none px-4 py-3" placeholder="Your message" required></textarea>
-                    </div>
-                    <button type="submit" class="mt-6 w-full flex justify-center py-3 px-8 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 transition">
-                        Add Contact Submission
-                    </button>
-                    <div id="contact-message-box" class="mt-4 text-center text-sm"></div>
-                </form>
+          <div class="mt-4">
+            <label for="contact-subject" class="block text-sm font-medium text-slate-900">Subject</label>
+            <input type="text" id="contact-subject" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Project Inquiry, Partnership, etc.">
+          </div>
 
-                <div id="contact-submissions-container" class="space-y-4">
-                    <!-- Contact submissions will be rendered here -->
-                </div>
-            </section>
+          <div class="mt-4">
+            <label for="contact-message" class="required block text-sm font-medium text-slate-900">Message</label>
+            <textarea id="contact-message" rows="3" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Your message" required></textarea>
+          </div>
 
-            <!-- Career Submissions Section -->
-            <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-blue-100">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-2xl font-bold text-purple-600">Career Submissions</h2>
-                    <span id="career-count" class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full font-semibold text-sm">0 entries</span>
-                </div>
-                <!-- Form to simulate a new submission -->
-                <form id="career-form" class="bg-white p-6 rounded-2xl shadow-inner mb-6 border border-blue-100">
-                    <h3 class="font-semibold text-xl md:text-2xl text-purple-900 mb-4">Add New Candidate</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="firstName" class="required block text-sm font-medium text-slate-900">First Name</label>
-                            <input type="text" id="firstName" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Your first name" required>
-                        </div>
-                        <div>
-                            <label for="lastName" class="required block text-sm font-medium text-slate-900">Last Name</label>
-                            <input type="text" id="lastName" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Your last name" required>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label for="email" class="required block text-sm font-medium text-slate-900">Email</label>
-                            <input type="email" id="email" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="you@example.com" required>
-                        </div>
-                        <div>
-                            <label for="phone" class="required block text-sm font-medium text-slate-900">Contact No.</label>
-                            <input type="tel" id="phone" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Ex: 9876543210" required>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                         <div>
-                            <label for="workExp" class="required block text-sm font-medium text-slate-900">Work Experience</label>
-                            <input type="text" id="workExp" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="e.g., 1 year, Fresher" required>
-                        </div>
-                        <div>
-                            <label for="applyingFor" class="required block text-sm font-medium text-slate-900">Applying For</label>
-                            <input type="text" id="applyingFor" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="e.g., Full-Stack Developer" required>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label for="github" class="required block text-sm font-medium text-slate-900">GitHub Link</label>
-                            <input type="url" id="github" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="https://github.com/username" required>
-                        </div>
-                        <div>
-                            <label for="linkedin" class="required block text-sm font-medium text-slate-900">LinkedIn Profile Link</label>
-                            <input type="url" id="linkedin" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="https://www.linkedin.com/in/username" required>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <label for="intro" class="block text-sm font-medium text-slate-900">Short Intro (Optional)</label>
-                        <textarea id="intro" rows="3" class="mt-2 w-full rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-200 focus:outline-none px-4 py-3" placeholder="Tell us about yourself (optional)"></textarea>
-                    </div>
-                     <div class="mt-4">
-                        <label for="resume" class="required block text-sm font-medium text-slate-900">Resume File</label>
-                        <input type="file" id="resume" accept=".pdf" class="mt-2 w-full text-slate-900 rounded-xl border border-slate-300 bg-slate-50 px-4 py-3">
-                    </div>
-                    <button type="submit" class="mt-6 w-full flex justify-center py-3 px-8 rounded-xl font-semibold text-white bg-purple-600 hover:bg-purple-700 active:bg-purple-800 transition">
-                        Add Career Submission
-                    </button>
-                    <div id="career-message-box" class="mt-4 text-center text-sm"></div>
-                </form>
+          <button type="submit" class="mt-6 w-full py-3 rounded-xl font-semibold text-white bg-blue-600 hover:bg-blue-700">Add Contact Submission</button>
+          <div id="contact-message-box" class="mt-4 text-center text-sm"></div>
+        </form>
 
-                <div id="career-submissions-container" class="space-y-4">
-                    <!-- Career submissions will be rendered here -->
-                </div>
-            </section>
-        </main>
-    </div>
+        <div id="contact-submissions-container" class="space-y-4"></div>
+      </section>
 
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+      <!-- Career Section -->
+      <section class="bg-white rounded-2xl shadow-lg p-6 md:p-8 border border-blue-100">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold text-purple-600">Career Submissions</h2>
+          <span id="career-count" class="px-3 py-1 bg-purple-100 text-purple-600 rounded-full font-semibold text-sm">0 entries</span>
+        </div>
 
-        // Enable debug logging for Firebase
-        setLogLevel('debug');
+        <form id="career-form" class="bg-white p-6 rounded-2xl shadow-inner mb-6 border border-blue-100">
+          <h3 class="font-semibold text-xl md:text-2xl text-purple-900 mb-4">Add New Candidate</h3>
 
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="firstName" class="required block text-sm font-medium text-slate-900">First Name</label>
+              <input type="text" id="firstName" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Your first name" required>
+            </div>
+            <div>
+              <label for="lastName" class="required block text-sm font-medium text-slate-900">Last Name</label>
+              <input type="text" id="lastName" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Your last name" required>
+            </div>
+          </div>
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label for="email" class="required block text-sm font-medium text-slate-900">Email</label>
+              <input type="email" id="email" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="you@example.com" required>
+            </div>
+            <div>
+              <label for="phone" class="required block text-sm font-medium text-slate-900">Contact No.</label>
+              <input type="tel" id="phone" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Ex: 9876543210" required>
+            </div>
+          </div>
 
-        // UI elements
-        const loginContainer = document.getElementById('login-container');
-        const loginForm = document.getElementById('login-form');
-        const usernameInput = document.getElementById('username');
-        const passwordInput = document.getElementById('password');
-        const loginErrorMsg = document.getElementById('login-error-msg');
-        const dashboardContainer = document.getElementById('dashboard-container');
-        const userInfoEl = document.getElementById('user-info');
-        const contactForm = document.getElementById('contact-form');
-        const careerForm = document.getElementById('career-form');
-        const contactSubmissionsContainer = document.getElementById('contact-submissions-container');
-        const careerSubmissionsContainer = document.getElementById('career-submissions-container');
-        const contactCountEl = document.getElementById('contact-count');
-        const careerCountEl = document.getElementById('career-count');
-        const contactMessageBox = document.getElementById('contact-message-box');
-        const careerMessageBox = document.getElementById('career-message-box');
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label for="workExp" class="required block text-sm font-medium text-slate-900">Work Experience</label>
+              <input type="text" id="workExp" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="e.g., 1 year, Fresher" required>
+            </div>
+            <div>
+              <label for="applyingFor" class="required block text-sm font-medium text-slate-900">Applying For</label>
+              <input type="text" id="applyingFor" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="e.g., Full-Stack Developer" required>
+            </div>
+          </div>
 
-        // Usernames and their full names
-        const userNames = {
-            'meet.trivedi': 'Meet Trivedi',
-            'saurav.patel': 'Saurav Patel',
-            'krushnaraj.nakum': 'Krushnaraj Nakum',
-            'darshan.dalwadi': 'Darshan Dalwadi',
-        };
-        let currentLoggedInUser = null;
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <label for="github" class="required block text-sm font-medium text-slate-900">GitHub Link</label>
+              <input type="url" id="github" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="https://github.com/username" required>
+            </div>
+            <div>
+              <label for="linkedin" class="required block text-sm font-medium text-slate-900">LinkedIn Profile Link</label>
+              <input type="url" id="linkedin" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="https://www.linkedin.com/in/username" required>
+            </div>
+          </div>
 
-        // Function to show a temporary message
-        function showMessage(element, message, type) {
-            element.textContent = message;
-            element.className = `mt-4 text-center text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
-            setTimeout(() => {
-                element.textContent = '';
-                element.className = 'mt-4 text-center text-sm';
-            }, 3000);
-        }
+          <div class="mt-4">
+            <label for="intro" class="block text-sm font-medium text-slate-900">Short Intro (Optional)</label>
+            <textarea id="intro" rows="3" class="mt-2 w-full rounded-xl border px-4 py-3" placeholder="Tell us about yourself (optional)"></textarea>
+          </div>
 
-        // Handle user authentication and data loading
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                // If not authenticated, ensure the login page is visible.
-                loginContainer.classList.remove('hidden');
-                dashboardContainer.classList.add('hidden');
-            } else {
-                // If authenticated, hide login and show dashboard
-                loginContainer.classList.add('hidden');
-                dashboardContainer.classList.remove('hidden');
-                
-                // Firestore paths based on security rules
-                const contactCollectionPath = `artifacts/${appId}/public/data/contact_submissions`;
-                const careerCollectionPath = `artifacts/${appId}/public/data/career_submissions`;
+          <div class="mt-4">
+            <label for="resume" class="required block text-sm font-medium text-slate-900">Resume File</label>
+            <input type="file" id="resume" accept=".pdf" class="mt-2 w-full text-slate-900" />
+          </div>
 
-                // Real-time listener for contact submissions
-                const contactQuery = query(collection(db, contactCollectionPath));
-                onSnapshot(contactQuery, (snapshot) => {
-                    contactSubmissionsContainer.innerHTML = ''; // Clear previous data
-                    contactCountEl.textContent = `${snapshot.docs.length} entries`;
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        const submissionDate = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'N/A';
-                        const card = `
-                            <div class="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-200">
-                                <h4 class="text-base font-bold text-blue-800">${data.name}</h4>
-                                <ul class="text-xs text-gray-700 mt-2 space-y-1">
-                                    <li><strong>Email:</strong> ${data.email}</li>
-                                    <li><strong>Subject:</strong> ${data.subject || 'N/A'}</li>
-                                </ul>
-                                <p class="text-xs text-gray-500 mt-2 italic">${data.message}</p>
-                                <p class="text-right text-xs text-gray-400 mt-2">Submitted: ${submissionDate}</p>
-                            </div>
-                        `;
-                        contactSubmissionsContainer.innerHTML += card;
-                    });
-                }, (error) => {
-                    console.error("Error fetching contact data:", error);
-                    contactSubmissionsContainer.innerHTML = `<p class="text-red-600 text-sm">Failed to load data. Check console for details.</p>`;
-                });
+          <button type="submit" class="mt-6 w-full py-3 rounded-xl font-semibold text-white bg-purple-600 hover:bg-purple-700">Add Career Submission</button>
+          <div id="career-message-box" class="mt-4 text-center text-sm"></div>
+        </form>
 
-                // Real-time listener for career submissions
-                const careerQuery = query(collection(db, careerCollectionPath));
-                onSnapshot(careerQuery, (snapshot) => {
-                    careerSubmissionsContainer.innerHTML = ''; // Clear previous data
-                    careerCountEl.textContent = `${snapshot.docs.length} entries`;
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        const submissionDate = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString() : 'N/A';
-                        const card = `
-                            <div class="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-200">
-                                <h4 class="text-base font-bold text-purple-800">${data.firstName} ${data.lastName}</h4>
-                                <p class="text-sm text-purple-600">${data.applyingFor}</p>
-                                <ul class="text-xs text-gray-700 mt-2 space-y-1">
-                                    <li><strong>Email:</strong> ${data.email}</li>
-                                    <li><strong>Phone:</strong> ${data.phone}</li>
-                                    <li><strong>Experience:</strong> ${data.workExp}</li>
-                                    <li><strong>GitHub:</strong> <a href="${data.github}" target="_blank" class="text-blue-500 hover:underline break-all">${data.github}</a></li>
-                                    <li><strong>LinkedIn:</strong> <a href="${data.linkedin}" target="_blank" class="text-blue-500 hover:underline break-all">${data.linkedin}</a></li>
-                                    ${data.resumeUrl ? `<li><strong>Resume:</strong> <a href="${data.resumeUrl}" target="_blank" class="text-blue-500 hover:underline">View Resume</a></li>` : ''}
-                                </ul>
-                                ${data.intro ? `<p class="text-xs text-gray-500 mt-2 italic">${data.intro}</p>` : ''}
-                                <p class="text-right text-xs text-gray-400 mt-2">Submitted: ${submissionDate}</p>
-                            </div>
-                        `;
-                        careerSubmissionsContainer.innerHTML += card;
-                    });
-                }, (error) => {
-                    console.error("Error fetching career data:", error);
-                    careerSubmissionsContainer.innerHTML = `<p class="text-red-600 text-sm">Failed to load data. Check console for details.</p>`;
-                });
+        <div id="career-submissions-container" class="space-y-4"></div>
+      </section>
+    </main>
+  </div>
 
-                // Handle contact form submission
-                contactForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const name = document.getElementById('contact-name').value;
-                    const email = document.getElementById('contact-email').value;
-                    const subject = document.getElementById('contact-subject').value;
-                    const message = document.getElementById('contact-message').value;
+  <!-- FULL Firebase + App logic (CDN v12.3.0) -->
+  <script type="module">
+    /* ===== Imports (Firebase v12.3.0 CDN) ===== */
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-analytics.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, onSnapshot, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
-                    try {
-                        await addDoc(collection(db, contactCollectionPath), {
-                            name,
-                            email,
-                            subject,
-                            message,
-                            timestamp: new Date()
-                        });
-                        showMessage(contactMessageBox, 'Submission added successfully!', 'success');
-                        contactForm.reset();
-                    } catch (e) {
-                        console.error("Error adding document: ", e);
-                        showMessage(contactMessageBox, 'Error adding submission.', 'error');
-                    }
-                });
+    console.log("Loading Firebase + app script...");
 
-                // Handle career form submission
-                careerForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    const firstName = document.getElementById('firstName').value;
-                    const lastName = document.getElementById('lastName').value;
-                    const email = document.getElementById('email').value;
-                    const phone = document.getElementById('phone').value;
-                    const workExp = document.getElementById('workExp').value;
-                    const applyingFor = document.getElementById('applyingFor').value;
-                    const github = document.getElementById('github').value;
-                    const linkedin = document.getElementById('linkedin').value;
-                    const intro = document.getElementById('intro').value;
-                    const resumeFile = document.getElementById('resume').files[0];
+    /* ========== PASTE YOUR FIREBASE CONFIG HERE (from Console) ========== */
+    const firebaseConfig = {
+      apiKey: "AIzaSyDOdVvGLLSTHupEuI_idDcLJpWJAQZlL-c",
+      authDomain: "ingrowwth-dashboard.firebaseapp.com",
+      // databaseURL: "https://ingrowwth-default-rtdb.firebaseio.com",
+      projectId: "ingrowwth-dashboard",
+      storageBucket: "ingrowwth-dashboard.firebasestorage.app",
+      messagingSenderId: "939749875225",
+      appId: "1:939749875225:web:fd2014c1d9320fd09bd488",
+      measurementId: "G-BZN5CV92X7"
+    };
+    /* =================================================================== */
 
-                    if (!resumeFile) {
-                        showMessage(careerMessageBox, 'Please select a resume file.', 'error');
-                        return;
-                    }
-                    
-                    try {
-                        // Create a reference to the storage path
-                        const resumeRef = ref(storage, `resumes/${Date.now()}-${resumeFile.name}`);
-                        
-                        // Upload the file
-                        await uploadBytes(resumeRef, resumeFile);
-                        
-                        // Get the public download URL
-                        const resumeUrl = await getDownloadURL(resumeRef);
+    // Use projectId consistently
+    const appId = firebaseConfig.projectId;
 
-                        // Save the data to Firestore with the resume URL
-                        await addDoc(collection(db, careerCollectionPath), {
-                            firstName,
-                            lastName,
-                            email,
-                            phone,
-                            workExp,
-                            applyingFor,
-                            github,
-                            linkedin,
-                            intro,
-                            resumeUrl,
-                            timestamp: new Date()
-                        });
-                        showMessage(careerMessageBox, 'Submission added successfully!', 'success');
-                        careerForm.reset();
-                    } catch (e) {
-                        console.error("Error adding document or uploading file: ", e);
-                        if (e.code === 'storage/unauthorized') {
-                            showMessage(careerMessageBox, 'Permission Denied. Please check your Firebase Storage security rules.', 'error');
-                        } else {
-                            showMessage(careerMessageBox, 'Error adding submission.', 'error');
-                        }
-                    }
-                });
-            }
-        });
-        
-        // Allowed users for demonstration purposes
-        const allowedUsers = {
-            'meet.trivedi': 'meetInnovations@007',
-            'saurav.patel': 'sauravInnovations@007',
-            'krushnaraj.nakum': 'krushnarajInnovations@007',
-            'darshan.dalwadi': 'darshanInnovations@007',
-        };
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    try { getAnalytics(app); } catch (e) { /* analytics may not work in local env */ }
 
-        // Handle login form submission
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
-            // Check hardcoded credentials
-            if (allowedUsers[username] && allowedUsers[username] === password) {
-                // If credentials are correct, show the dashboard immediately
-                currentLoggedInUser = username;
-                const displayName = userNames[username] || 'Guest';
-                userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${displayName}</span>`;
-                loginContainer.classList.add('hidden');
-                dashboardContainer.classList.remove('hidden');
-                loginErrorMsg.classList.add('hidden');
+    console.log("Firebase initialized:", app.options);
 
-                try {
-                    // Start the Firebase auth process in the background
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                } catch (error) {
-                    console.error("Background authentication failed:", error);
-                    // Handle this error silently as the UI is already showing
-                }
-            } else {
-                // Show an error if credentials are wrong
-                loginErrorMsg.textContent = 'Invalid username or password.';
-                loginErrorMsg.classList.remove('hidden');
-            }
-        });
+    // UI refs
+    const loginForm = document.getElementById('login-form');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginErrorMsg = document.getElementById('login-error-msg');
+    const loginContainer = document.getElementById('login-container');
+    const dashboardContainer = document.getElementById('dashboard-container');
+    const userInfoEl = document.getElementById('user-info');
 
-        // Add event listener for the toggle password button
-        const togglePasswordVisibility = document.getElementById('toggle-password-visibility');
-        if (togglePasswordVisibility) {
-            togglePasswordVisibility.addEventListener('click', () => {
-                const passwordInput = document.getElementById('password');
-                const icon = togglePasswordVisibility.querySelector('svg');
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7a9.957 9.957 0 011.875.175M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z" />
-                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 20L4 4" />`;
-                } else {
-                    passwordInput.type = 'password';
-                    icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />`;
-                }
+    const contactForm = document.getElementById('contact-form');
+    const careerForm = document.getElementById('career-form');
+    const contactSubmissionsContainer = document.getElementById('contact-submissions-container');
+    const careerSubmissionsContainer = document.getElementById('career-submissions-container');
+    const contactCountEl = document.getElementById('contact-count');
+    const careerCountEl = document.getElementById('career-count');
+    const contactMessageBox = document.getElementById('contact-message-box');
+    const careerMessageBox = document.getElementById('career-message-box');
+
+    // Toggle password show/hide
+    // const togglePwdBtn = document.getElementById('toggle-password-visibility');
+    // const eyeOpen = document.getElementById('eye-open');
+    // const eyeClosed = document.getElementById('eye-closed');
+    // togglePwdBtn.addEventListener('click', () => {
+    //   const p = loginPassword;
+    //   if (!p) return;
+    //   if (p.type === 'password') {
+    //     p.type = 'text';
+    //     eyeOpen.classList.add('hidden');
+    //     eyeClosed.classList.remove('hidden');
+    //     togglePwdBtn.setAttribute('aria-label', 'Hide password');
+    //   } else {
+    //     p.type = 'password';
+    //     eyeOpen.classList.remove('hidden');
+    //     eyeClosed.classList.add('hidden');
+    //     togglePwdBtn.setAttribute('aria-label', 'Show password');
+    //   }
+    // });
+
+    // small helpers
+    function showMessage(el, text, type='success') {
+      el.textContent = text;
+      el.className = `mt-4 text-center text-sm ${type === 'success' ? 'text-green-600' : 'text-red-600'}`;
+      setTimeout(()=>{ el.textContent=''; el.className='mt-4 text-center text-sm'; }, 3000);
+    }
+    function escapeHtml(s) { if (s === null || s === undefined) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;'); }
+    function escapeAttr(s) { if (s === null || s === undefined) return ''; return encodeURI(String(s)); }
+
+    /* -------------------------
+       LOGIN: validation + sign-in
+       ------------------------- */
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginErrorMsg.classList.add('hidden');
+
+      const email = (loginEmail.value || '').trim();
+      const password = loginPassword.value || '';
+
+      // basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        loginErrorMsg.textContent = 'Please enter a valid email address.';
+        loginErrorMsg.classList.remove('hidden');
+        return;
+      }
+
+      // password basic rules (6+)
+      if (password.length < 6) {
+        loginErrorMsg.textContent = 'Password must be at least 6 characters.';
+        loginErrorMsg.classList.remove('hidden');
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        // onAuthStateChanged will handle the rest
+      } catch (err) {
+        console.error("Login error:", err);
+        let friendly = 'Login failed.';
+        if (err.code === 'auth/user-not-found') friendly = 'No account found for that email.';
+        else if (err.code === 'auth/wrong-password') friendly = 'Incorrect password.';
+        else if (err.message) friendly = err.message;
+        loginErrorMsg.textContent = friendly;
+        loginErrorMsg.classList.remove('hidden');
+      }
+    });
+
+    /* -------------------------
+       onAuthStateChanged: show dashboard / listeners
+       ------------------------- */
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // not signed in
+        loginContainer.classList.remove('hidden');
+        dashboardContainer.classList.add('hidden');
+        userInfoEl.textContent = '';
+        console.log('User not signed in');
+      } else {
+        // signed in
+        console.log('User signed in:', user.email, user.uid);
+        loginContainer.classList.add('hidden');
+        dashboardContainer.classList.remove('hidden');
+        userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${user.email}</span> — <button id="signout-btn" class="ml-3 text-xs text-red-600 underline">Sign out</button>`;
+        document.getElementById('signout-btn').addEventListener('click', async () => { await signOut(auth); });
+
+        // run connection tests (writes/reads + storage upload)
+        await runConnectionTests();
+
+        // Firestore collection paths (based on project id)
+        const contactCollectionPath = `artifacts/${appId}/public/data/contact_submissions`;
+        const careerCollectionPath  = `artifacts/${appId}/public/data/career_submissions`;
+
+        // contact listener
+        try {
+          const contactQuery = query(collection(db, contactCollectionPath));
+          onSnapshot(contactQuery, (snap) => {
+            contactSubmissionsContainer.innerHTML = '';
+            contactCountEl.textContent = `${snap.docs.length} entries`;
+            snap.forEach(docSnap => {
+              const d = docSnap.data();
+              const submitted = d.timestamp ? (d.timestamp.toDate ? d.timestamp.toDate().toLocaleString() : new Date(d.timestamp).toLocaleString()) : 'N/A';
+              contactSubmissionsContainer.innerHTML += `
+                <div class="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-200">
+                  <h4 class="text-base font-bold text-blue-800">${escapeHtml(d.name)}</h4>
+                  <ul class="text-xs text-gray-700 mt-2">
+                    <li><strong>Email:</strong> ${escapeHtml(d.email)}</li>
+                    <li><strong>Subject:</strong> ${escapeHtml(d.subject || 'N/A')}</li>
+                  </ul>
+                  <p class="text-xs text-gray-500 mt-2 italic">${escapeHtml(d.message)}</p>
+                  <p class="text-right text-xs text-gray-400 mt-2">Submitted: ${submitted}</p>
+                </div>`;
             });
+          }, (err) => { console.error('Contact listener error:', err); contactSubmissionsContainer.innerHTML = `<p class="text-red-600">Failed to load contact data.</p>`; });
+        } catch (err) {
+          console.error('Contact listener setup failed', err);
         }
-    </script>
+
+        // career listener
+        try {
+          const careerQuery = query(collection(db, careerCollectionPath));
+          onSnapshot(careerQuery, (snap) => {
+            careerSubmissionsContainer.innerHTML = '';
+            careerCountEl.textContent = `${snap.docs.length} entries`;
+            snap.forEach(docSnap => {
+              const d = docSnap.data();
+              const submitted = d.timestamp ? (d.timestamp.toDate ? d.timestamp.toDate().toLocaleString() : new Date(d.timestamp).toLocaleString()) : 'N/A';
+              careerSubmissionsContainer.innerHTML += `
+                <div class="bg-gray-50 rounded-xl p-4 shadow-sm border border-gray-200">
+                  <h4 class="text-base font-bold text-purple-800">${escapeHtml(d.firstName)} ${escapeHtml(d.lastName)}</h4>
+                  <p class="text-sm text-purple-600">${escapeHtml(d.applyingFor)}</p>
+                  <ul class="text-xs text-gray-700 mt-2">
+                    <li><strong>Email:</strong> ${escapeHtml(d.email)}</li>
+                    <li><strong>Phone:</strong> ${escapeHtml(d.phone)}</li>
+                    <li><strong>Experience:</strong> ${escapeHtml(d.workExp)}</li>
+                    ${d.resumeUrl ? `<li><strong>Resume:</strong> <a href="${escapeAttr(d.resumeUrl)}" target="_blank" class="text-blue-500">View Resume</a></li>` : ''}
+                  </ul>
+                  ${d.intro ? `<p class="text-xs text-gray-500 mt-2 italic">${escapeHtml(d.intro)}</p>` : ''}
+                  <p class="text-right text-xs text-gray-400 mt-2">Submitted: ${submitted}</p>
+                </div>`;
+            });
+          }, (err) => { console.error('Career listener error:', err); careerSubmissionsContainer.innerHTML = `<p class="text-red-600">Failed to load career data.</p>`; });
+        } catch (err) {
+          console.error('Career listener setup failed', err);
+        }
+      }
+    });
+
+    /* -------------------------
+       Submission handlers (writes + storage)
+       ------------------------- */
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('contact-name').value;
+      const email = document.getElementById('contact-email').value;
+      const subject = document.getElementById('contact-subject').value;
+      const message = document.getElementById('contact-message').value;
+      const contactCollectionPath = `artifacts/${appId}/public/data/contact_submissions`;
+      try {
+        await addDoc(collection(db, contactCollectionPath), { name, email, subject, message, timestamp: new Date() });
+        showMessage(contactMessageBox, 'Submission added successfully!', 'success');
+        contactForm.reset();
+      } catch (err) {
+        console.error('Error adding contact:', err);
+        showMessage(contactMessageBox, 'Error adding submission.', 'error');
+      }
+    });
+
+    careerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const workExp = document.getElementById('workExp').value;
+      const applyingFor = document.getElementById('applyingFor').value;
+      const github = document.getElementById('github').value;
+      const linkedin = document.getElementById('linkedin').value;
+      const intro = document.getElementById('intro').value;
+      const resumeFile = document.getElementById('resume').files[0];
+
+      if (!resumeFile) { showMessage(careerMessageBox, 'Please select a resume file.', 'error'); return; }
+
+      const careerCollectionPath = `artifacts/${appId}/public/data/career_submissions`;
+      try {
+        const resumeRef = ref(storage, `resumes/${Date.now()}-${resumeFile.name}`);
+        await uploadBytes(resumeRef, resumeFile);
+        const resumeUrl = await getDownloadURL(resumeRef);
+        await addDoc(collection(db, careerCollectionPath), {
+          firstName, lastName, email, phone, workExp, applyingFor, github, linkedin, intro, resumeUrl, timestamp: new Date()
+        });
+        showMessage(careerMessageBox, 'Submission added successfully!', 'success');
+        careerForm.reset();
+      } catch (err) {
+        console.error('Error adding career submission:', err);
+        if (err.code === 'storage/unauthorized') showMessage(careerMessageBox, 'Permission Denied. Check Storage rules.', 'error');
+        else showMessage(careerMessageBox, 'Error adding submission.', 'error');
+      }
+    });
+
+    /* -------------------------
+       Connection tests (writes + uploads) run after sign-in
+       ------------------------- */
+    async function runConnectionTests() {
+      console.log('Running connection tests...');
+      try {
+        const testRef = doc(db, 'testConnection', `client_${Date.now()}`);
+        await setDoc(testRef, { ok: true, time: new Date() });
+        console.log('✅ Firestore write success (testConnection)');
+        const readSnap = await getDoc(testRef);
+        if (readSnap.exists()) console.log('✅ Firestore read success:', readSnap.data());
+      } catch (err) {
+        console.error('❌ Firestore test failed:', err);
+      }
+
+      try {
+        const blob = new Blob([`hello ${Date.now()}`], { type: 'text/plain' });
+        const tmpPath = `testUploads/hello-${Date.now()}.txt`;
+        const sRef = ref(storage, tmpPath);
+        await uploadBytes(sRef, blob);
+        const url = await getDownloadURL(sRef);
+        console.log('✅ Storage upload success. Download URL:', url);
+      } catch (err) {
+        console.error('❌ Storage test failed:', err);
+      }
+    }
+  </script>
 </body>
 </html>
