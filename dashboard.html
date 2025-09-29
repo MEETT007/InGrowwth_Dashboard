@@ -201,7 +201,64 @@
   .user-name { font-size: 0.9rem; }
   .btn-primary { font-size: 0.95rem; padding: 9px; }
 }
-  </style>
+/* --- Badge & section header responsive fixes --- */
+
+/* Make the header container more flexible and allow the title to shrink */
+section > .flex.justify-between.items-center,
+section > .flex {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Allow the H2 to shrink so the badge isn't pushed out */
+section h2 {
+  flex: 1 1 auto;      /* allow shrinking */
+  min-width: 0;        /* important to allow flex children to shrink in Firefox/Chrome */
+  word-break: break-word;
+  margin: 0;
+}
+
+/* Style the counters consistently and prevent wrapping */
+#contact-count, #career-count {
+  flex: 0 0 auto;            /* don't grow, don't shrink */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;       /* keep "0 entries" on one line */
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(59,130,246,0.08); /* fallback; color will be overridden by existing classes */
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Make sure badges visually match their colors on small screens */
+#career-count { background: rgba(124,58,237,0.08); }
+
+/* On very narrow screens stack title + badge vertically so it looks tidy */
+@media (max-width: 420px) {
+  section > .flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  /* place the badge to the right within the stacked layout */
+  #contact-count, #career-count {
+    align-self: flex-end;
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  /* slightly smaller headings on smallest devices */
+  section h2 { font-size: 1.05rem; }
+}
+
+/* If some cards still overflow horizontally, force safe wrapping */
+main, section, .split-card { max-width: 100%; box-sizing: border-box; }
+
+</style>
 </head>
 <body class="p-6 md:p-10 flex flex-col items-center">
 
