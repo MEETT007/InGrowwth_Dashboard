@@ -10,7 +10,6 @@
 
     /* base */
     body { font-family: 'Inter', sans-serif; color:#1f2937; min-height:100vh;
-      /* radiant background similar to your screenshot */
       background:
         radial-gradient(600px 250px at 6% 12%, rgba(124,58,237,0.14), transparent 12%),
         radial-gradient(500px 220px at 94% 86%, rgba(59,130,246,0.12), transparent 10%),
@@ -20,15 +19,12 @@
     label.required::after { content: " *"; color: #ef4444; }
     input:focus, textarea:focus { outline:none; box-shadow:0 6px 24px rgba(99,102,241,0.06), 0 0 0 6px rgba(99,102,241,0.04); border-color:rgba(99,102,241,0.5); background:#fff; }
     .input-with-icon { position: relative; }
-
-    /* <-- UPDATED: push the eye button more to the RIGHT and make sure it overrides other rules --> */
     .input-with-icon button {
       position: absolute;
-      right: 1.25rem !important; /* moved further right (increase if you want even more) */
+      right: 1.25rem !important;
       top: 50%;
       transform: translateY(-50%);
     }
-
     .hidden-el { display:none !important; }
 
     /* main split login card */
@@ -43,67 +39,88 @@
       overflow: hidden;
       margin-top: 4.5rem;
     }
+    .split-left { padding: 48px; background: linear-gradient(180deg, rgba(255,255,255,0.44), rgba(255,255,255,0.22)); display:flex; flex-direction:column; justify-content:center; gap:14px; }
+    .split-right { padding: 48px; display:flex; flex-direction:column; justify-content:center; }
 
-    .split-left {
-      padding: 48px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.44), rgba(255,255,255,0.22));
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      gap:14px;
-    }
-
-    .split-right {
-      padding: 48px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-    }
-
-    .brand-chip {
-      display:inline-flex;
-      align-items:center;
-      gap:12px;
-      background: linear-gradient(90deg,#f8f4ff,#f3f0ff);
-      border-radius:12px;
-      padding:10px 14px;
-      border: 1px solid rgba(99,102,241,0.06);
-      box-shadow: 0 6px 18px rgba(99,102,241,0.04);
-    }
+    .brand-chip { display:inline-flex; align-items:center; gap:12px; background: linear-gradient(90deg,#f8f4ff,#f3f0ff); border-radius:12px; padding:10px 14px; border: 1px solid rgba(99,102,241,0.06); box-shadow: 0 6px 18px rgba(99,102,241,0.04); }
     .brand-chip img { height:64px; width:auto; border-radius:10px; display: block; object-fit: contain; }
 
-    .btn-primary {
-      background: linear-gradient(90deg,#7c3aed,#4f46e5);
-      color: #fff;
-      border-radius: 12px;
-      font-weight: 700;
-      padding: 12px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 10px 30px rgba(79,70,229,0.18);
-    }
+    .btn-primary { background: linear-gradient(90deg,#7c3aed,#4f46e5); color: #fff; border-radius: 12px; font-weight: 700; padding: 12px; width: 100%; text-align: center; box-shadow: 0 10px 30px rgba(79,70,229,0.18); }
 
     /* keep original dashboard card glassy */
-    .bg-white.rounded-2xl {
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      border: 1px solid rgba(203,213,225,0.35);
-    }
-
+    .bg-white.rounded-2xl { background: rgba(255,255,255,0.92); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); border: 1px solid rgba(203,213,225,0.35); }
     .shadow-inner { box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
 
+    /* ---- New header styles ---- */
+    .dashboard-header { width:100%; margin-bottom: 1.5rem; }
+    .container-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .brand-left { display:flex; align-items:center; gap:12px; }
+    .header-logo { height:44px; width:auto; border-radius:8px; object-fit:contain; }
+    .dashboard-title { font-size:1.75rem; font-weight:800; color:#0f172a; line-height:1; }
+    .dashboard-sub { font-size:0.95rem; color:#475569; margin-top:2px; }
+
+    .user-right { display:flex; align-items:center; gap:12px; }
+    .user-bubble {
+      width:44px; height:44px; border-radius:9999px; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(180deg,#eef2ff,#f8fafc); color:#0f172a; font-weight:700; box-shadow:0 4px 14px rgba(15,23,42,0.06);
+      border:1px solid rgba(71,85,105,0.06);
+    }
+    .user-bubble span { font-size:0.95rem; }
+
+    .user-meta { text-align:left; }
+    .user-name { color:#1f2937; font-size:0.95rem; font-weight:600; }
+    .user-role { font-size:0.82rem; color:#6b7280; margin-top:2px; }
+
+    .signout-btn {
+      background: transparent;
+      color:#dc2626;
+      font-size:0.85rem;
+      padding:6px 10px;
+      border-radius:8px;
+      border:1px solid rgba(220,38,38,0.08);
+      cursor:pointer;
+    }
+    .signout-btn:hover { background: rgba(220,38,38,0.05); box-shadow: 0 6px 18px rgba(99,102,241,0.04); }
+
+    /* Modal (confirm sign out) */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(2,6,23,0.45); display:flex; align-items:center; justify-content:center;
+      opacity: 0; pointer-events: none; transition: opacity 180ms ease;
+      z-index: 60;
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+
+    .modal-content {
+      width: 100%; max-width: 480px; background: linear-gradient(180deg, #fff, #fbfbff);
+      border-radius: 12px; padding: 20px; box-shadow: 0 25px 60px rgba(2,6,23,0.35);
+      transform: translateY(8px); transition: transform 200ms ease, opacity 200ms ease; opacity: 0;
+    }
+    .modal-backdrop.open .modal-content { transform: translateY(0); opacity: 1; }
+
+    .modal-title { font-size:1.125rem; font-weight:700; color:#0f172a; margin-bottom:6px; }
+    .modal-body { color: #475569; font-size:0.95rem; margin-bottom:16px; }
+
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; }
+    .btn-ghost { background: transparent; border:1px solid rgba(99,102,241,0.08); padding:8px 12px; border-radius:8px; cursor:pointer; }
+    .btn-danger { background: linear-gradient(90deg,#ef4444,#dc2626); color:#fff; padding:8px 12px; border-radius:8px; border:0; cursor:pointer; box-shadow: 0 8px 30px rgba(220,38,38,0.18); }
+
+    /* responsive adjustments */
     @media (max-width: 900px) {
       .brand-chip img { height: 48px; }
       .brand-chip { gap: 10px; padding: 8px 10px; }
       .split-card { grid-template-columns: 1fr; margin-top: 2.5rem; }
       .split-left, .split-right { padding: 24px; }
+      .dashboard-title { font-size:1.25rem; }
+      .header-logo { height:36px; }
+      .user-bubble { width:40px; height:40px; }
+      .container-inner { flex-direction: column; align-items:flex-start; gap:10px; }
+      .modal-content { margin: 12px; }
     }
   </style>
 </head>
 <body class="p-6 md:p-10 flex flex-col items-center">
 
-  <!-- LOGIN: replaced with split card UI (left info, right form) -->
+  <!-- LOGIN CARD -->
   <div id="login-container" class="split-card mx-auto">
     <!-- LEFT PANEL: Branding & Info -->
     <div class="split-left">
@@ -147,23 +164,9 @@
           <div>
             <label for="login-password" class="block text-sm font-medium text-slate-900">Password</label>
             <div class="input-with-icon mt-1">
-              <!-- <-- UPDATED: increase padding-right so text doesn't collide with the eye --> 
               <input type="password" id="login-password" class="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 pr-6" placeholder="Your password" required>
               <button type="button" id="toggle-password-visibility" aria-label="Show password" class="absolute top-1/2 -translate-y-1/2 bg-transparent border-0 p-2 text-slate-600 hover:bg-slate-100 rounded">
-                <!-- eye icon (open) -->
-                <!-- <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg> -->
-                <!-- eye icon (closed) -->
-                <!-- <svg id="eye-closed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M20 20L4 4" />
-                </svg> -->
+                <!-- optional eye icons -->
               </button>
             </div>
           </div>
@@ -185,11 +188,30 @@
 
   <!-- DASHBOARD -->
   <div id="dashboard-container" class="max-w-6xl w-full hidden mt-8">
-    <header class="text-center mb-6">
-      <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Submissions Dashboard</h1>
-      <p class="text-lg text-gray-600">Securely view all incoming contact and career form data in real-time.</p>
-      <div id="user-info" class="mt-4 text-sm text-gray-500"></div>
+
+    <!-- ===== NEW HEADER (replaces old centered header) ===== -->
+    <header class="dashboard-header">
+      <div class="container-inner">
+        <div class="brand-left">
+          <img src="company_logo_new_rounded.png" alt="InGrowwth" class="header-logo" />
+          <div>
+            <div class="dashboard-title">Submissions Dashboard</div>
+            <div class="dashboard-sub">Securely view all incoming contact and career form data in real-time.</div>
+          </div>
+        </div>
+
+        <div class="user-right">
+          <div id="user-bubble" class="user-bubble" title="Signed in user">
+            <span id="user-initial">I</span>
+          </div>
+          <div class="user-meta">
+            <div id="user-display" class="user-name">Signed in as <span id="user-name-text">User</span></div>
+            <div><button id="signout-btn" class="signout-btn" aria-haspopup="dialog" aria-controls="signout-modal">Sign out</button></div>
+          </div>
+        </div>
+      </div>
     </header>
+    <!-- ===== END HEADER ===== -->
 
     <main class="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full px-4">
       <!-- Contact Section -->
@@ -302,6 +324,18 @@
     </main>
   </div>
 
+  <!-- Sign-out Modal -->
+  <div id="signout-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="signout-title" tabindex="-1" style="display:none;">
+    <div class="modal-content" role="document" aria-describedby="signout-desc">
+      <div class="modal-title" id="signout-title">Confirm sign out</div>
+      <div class="modal-body" id="signout-desc">Are you sure you want to sign out? You'll need to sign in again to access the dashboard.</div>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn-ghost">Cancel</button>
+        <button id="modal-confirm" class="btn-danger">Sign out</button>
+      </div>
+    </div>
+  </div>
+
   <!-- FULL Firebase + App logic (CDN v12.3.0) -->
   <script type="module">
     /* ===== Imports (Firebase v12.3.0 CDN) ===== */
@@ -317,7 +351,6 @@
     const firebaseConfig = {
       apiKey: "AIzaSyDOdVvGLLSTHupEuI_idDcLJpWJAQZlL-c",
       authDomain: "ingrowwth-dashboard.firebaseapp.com",
-      // databaseURL: "https://ingrowwth-default-rtdb.firebaseio.com",
       projectId: "ingrowwth-dashboard",
       storageBucket: "ingrowwth-dashboard.firebasestorage.app",
       messagingSenderId: "939749875225",
@@ -339,6 +372,15 @@
 
     console.log("Firebase initialized:", app.options);
 
+    // ---- Email -> Friendly name mapping ----
+    const EMAIL_TO_NAME = {
+      "cmo.krushnaraj@ingrowwthinnovations.in": "Krushna Raj",
+      "info@ingrowwthinnovations.in": "InGrowwth Innovations",
+      "coo.saurav@ingrowwthinnovations.in": "Saurav Patel",
+      "cto.darshan@ingrowwthinnovations.in": "Darshan Dalwadi",
+      "ceo.meet@ingrowwthinnovations.in": "Meet Trivedi"
+    };
+
     // UI refs
     const loginForm = document.getElementById('login-form');
     const loginEmail = document.getElementById('login-email');
@@ -346,7 +388,6 @@
     const loginErrorMsg = document.getElementById('login-error-msg');
     const loginContainer = document.getElementById('login-container');
     const dashboardContainer = document.getElementById('dashboard-container');
-    const userInfoEl = document.getElementById('user-info');
 
     const contactForm = document.getElementById('contact-form');
     const careerForm = document.getElementById('career-form');
@@ -357,25 +398,11 @@
     const contactMessageBox = document.getElementById('contact-message-box');
     const careerMessageBox = document.getElementById('career-message-box');
 
-    // Toggle password show/hide
-    // const togglePwdBtn = document.getElementById('toggle-password-visibility');
-    // const eyeOpen = document.getElementById('eye-open');
-    // const eyeClosed = document.getElementById('eye-closed');
-    // togglePwdBtn.addEventListener('click', () => {
-    //   const p = loginPassword;
-    //   if (!p) return;
-    //   if (p.type === 'password') {
-    //     p.type = 'text';
-    //     eyeOpen.classList.add('hidden');
-    //     eyeClosed.classList.remove('hidden');
-    //     togglePwdBtn.setAttribute('aria-label', 'Hide password');
-    //   } else {
-    //     p.type = 'password';
-    //     eyeOpen.classList.remove('hidden');
-    //     eyeClosed.classList.add('hidden');
-    //     togglePwdBtn.setAttribute('aria-label', 'Show password');
-    //   }
-    // });
+    // Modal refs
+    const signoutBtn = document.getElementById('signout-btn');
+    const signoutModal = document.getElementById('signout-modal');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
 
     // small helpers
     function showMessage(el, text, type='success') {
@@ -433,15 +460,34 @@
         // not signed in
         loginContainer.classList.remove('hidden');
         dashboardContainer.classList.add('hidden');
-        userInfoEl.textContent = '';
+
+        const unameEl = document.getElementById('user-name-text');
+        const uinit = document.getElementById('user-initial');
+        if (unameEl) unameEl.textContent = '';
+        if (uinit) uinit.textContent = '';
         console.log('User not signed in');
       } else {
         // signed in
         console.log('User signed in:', user.email, user.uid);
         loginContainer.classList.add('hidden');
         dashboardContainer.classList.remove('hidden');
-        userInfoEl.innerHTML = `Signed in as <span class="font-medium text-gray-700">${user.email}</span> — <button id="signout-btn" class="ml-3 text-xs text-red-600 underline">Sign out</button>`;
-        document.getElementById('signout-btn').addEventListener('click', async () => { await signOut(auth); });
+
+        // resolve display name from mapping (fallback: user.displayName or cleaned email prefix)
+        const email = (user.email || '').toLowerCase();
+        const mapped = EMAIL_TO_NAME[email];
+        const displayName = mapped || (user.displayName && user.displayName.trim()) || email.split('@')[0].replace(/[._]/g,' ');
+        const initial = (displayName && displayName.charAt(0).toUpperCase()) || 'U';
+
+        // set header UI elements
+        const nameText = document.getElementById('user-name-text');
+        const initialEl = document.getElementById('user-initial');
+        if (nameText) nameText.textContent = displayName;
+        if (initialEl) initialEl.textContent = initial;
+
+        // hook up sign out: open modal
+        if (signoutBtn) {
+          signoutBtn.onclick = () => openSignoutModal();
+        }
 
         // run connection tests (writes/reads + storage upload)
         await runConnectionTests();
@@ -583,7 +629,55 @@
         console.error('❌ Storage test failed:', err);
       }
     }
+
+    /* -------------------------
+       Modal functions (sign out)
+       ------------------------- */
+    function openSignoutModal() {
+      signoutModal.style.display = 'flex';
+      // small timeout to allow CSS transition
+      requestAnimationFrame(() => signoutModal.classList.add('open'));
+      // trap focus on modal confirm
+      modalConfirm.focus();
+      // attach escape key handler
+      document.addEventListener('keydown', escHandler);
+    }
+
+    function closeSignoutModal() {
+      signoutModal.classList.remove('open');
+      // wait for transition then hide
+      setTimeout(() => { signoutModal.style.display = 'none'; }, 220);
+      document.removeEventListener('keydown', escHandler);
+    }
+
+    function escHandler(e) {
+      if (e.key === 'Escape') closeSignoutModal();
+    }
+
+    // cancel button
+    modalCancel.addEventListener('click', () => closeSignoutModal());
+
+    // confirm button -> perform sign out
+    modalConfirm.addEventListener('click', async () => {
+      try {
+        await signOut(auth);
+        closeSignoutModal();
+      } catch (err) {
+        console.error('Sign out failed', err);
+        // show a minimal inline error (no alert)
+        modalConfirm.textContent = 'Sign out';
+        closeSignoutModal();
+        showMessage(document.body, 'Sign out failed. Check console.', 'error');
+      }
+    });
+
+    // click outside modal closes
+    signoutModal.addEventListener('click', (ev) => {
+      if (ev.target === signoutModal) closeSignoutModal();
+    });
+
+    // Accessibility: ensure modal is keyboard navigable - simple approach
+    // (For a larger app use a11y-focused library for focus trap)
   </script>
 </body>
 </html>
-
