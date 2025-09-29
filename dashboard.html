@@ -116,6 +116,91 @@
       .container-inner { flex-direction: column; align-items:flex-start; gap:10px; }
       .modal-content { margin: 12px; }
     }
+    /* --- MOBILE-FRIENDLY ADJUSTMENTS --- */
+/* Keep the existing responsive rules above, but add these extra refinements */
+
+/* Medium phones / small tablets */
+@media (max-width: 900px) {
+  /* make header stack nicely */
+  .container-inner {
+    max-width: 100%;
+    padding: 0 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .brand-left { width:100%; gap:10px; }
+  .user-right {
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding-top: 4px;
+  }
+  .user-meta { text-align:right; margin-left:auto; }
+  .dashboard-sub { display:block; } /* still show short subtitle */
+  .split-card { margin-top: 1.5rem; }
+  .split-left, .split-right { padding: 20px; }
+  .brand-chip img { height:48px; }
+  .dashboard-title { font-size:1.25rem; }
+  .header-logo { height:36px; }
+  .btn-primary { padding: 10px; border-radius:10px; }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  /* header becomes compact and the title shrinks */
+  .container-inner {
+    padding: 0 12px;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .brand-left { gap:10px; align-items:center; }
+  .dashboard-title { font-size:1.05rem; font-weight:800; }
+  .dashboard-sub { display:none; } /* hide subtitle to save space */
+  .header-logo { height:32px; }
+  .user-bubble { width:36px; height:36px; font-size:0.9rem; }
+  .user-meta { text-align:left; margin-left:8px; }
+
+  /* collapse the big login split card to single column (already done) and reduce padding */
+  .split-card { grid-template-columns: 1fr; max-width: 100%; margin-top: 1.2rem; border-radius: 16px; }
+  .split-left, .split-right { padding: 14px; }
+
+  /* shrink the card inner paddings so forms fit without huge scroll */
+  main { padding: 0 8px; }
+  section { padding: 14px; }
+  .bg-white.rounded-2xl { padding: 10px; }
+
+  /* Make headings smaller for mobile */
+  h1, .dashboard-title { font-size: 1.05rem; }
+  h2 { font-size: 1.1rem; }
+  h3 { font-size: 1rem; }
+
+  /* adjust form spacing and inputs */
+  form#contact-form, form#career-form { padding: 12px; border-radius: 14px; }
+  input, textarea, .mt-2 { padding: 10px; font-size: 0.95rem; }
+
+  /* badge / counters */
+  #contact-count, #career-count {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  /* modal improvements */
+  .modal-content { margin: 8px; width: calc(100% - 24px); max-width: 420px; }
+
+  /* avoid horizontal overflow */
+  body, html { overflow-x: hidden; }
+}
+
+/* Minor visual improvements for very small screens (under 360px) */
+@media (max-width: 360px) {
+  .brand-chip img { height: 34px; }
+  .dashboard-title { font-size: 0.98rem; }
+  .user-name { font-size: 0.9rem; }
+  .btn-primary { font-size: 0.95rem; padding: 9px; }
+}
   </style>
 </head>
 <body class="p-6 md:p-10 flex flex-col items-center">
